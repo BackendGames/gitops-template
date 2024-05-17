@@ -8,11 +8,11 @@ spec:
   configuration: |
       terraform {
         backend "s3" {
-          endpoint = "nyc3.digitaloceanspaces.com"
-          key      = "registry/clusters/<WORKLOAD_CLUSTER_NAME>/infrastructure/provider-config/terraform.tfstate"
           bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
-          // Don't change this.
-          region = "us-east-1"
+          key      = "registry/clusters/<WORKLOAD_CLUSTER_NAME>/infrastructure/provider-config/terraform.tfstate"
+          endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+
+          region = "<CLOUD_REGION>"
 
           skip_credentials_validation = true
           skip_metadata_api_check     = true
@@ -20,9 +20,8 @@ spec:
           force_path_style            = true
         }
         required_providers {
-          digitalocean = {
-            source  = "digitalocean/digitalocean"
-            version = "~> 2.0"
+          civo = {
+            source = "civo/civo"
           }
           kubernetes = {
             source = "hashicorp/kubernetes"
@@ -34,7 +33,7 @@ spec:
           }
         }
       }
-      provider "digitalocean" {
+      provider "civo" {
         region = "<WORKLOAD_CLUSTER_REGION>"
       }
   credentials:
@@ -42,7 +41,7 @@ spec:
     source: None
     secretRef:
       namespace: crossplane-system
-      name: digitalocean-creds
+      name: civo-creds
       key: token
   - filename: .git-credentials
     source: Secret

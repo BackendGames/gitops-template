@@ -1,20 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: <WORKLOAD_CLUSTER_NAME>-infrastructure
+  name: <WORKLOAD_CLUSTER_NAME>-metaphor
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: '10'
+    argocd.argoproj.io/sync-wave: '100'
 spec:
   project: default
   source:
     repoURL: <GITOPS_REPO_URL>
-    path: registry/clusters/<WORKLOAD_CLUSTER_NAME>/infrastructure
+    path: registry/environments/<WORKLOAD_CLUSTER_NAME>/metaphor
     targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
-    name: in-cluster
+    name: <WORKLOAD_CLUSTER_NAME>
     namespace: <WORKLOAD_CLUSTER_NAME>
   syncPolicy:
     automated:
