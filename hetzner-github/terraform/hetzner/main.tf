@@ -12,8 +12,9 @@ terraform {
     force_path_style            = true
   }
   required_providers {
-    civo = {
-      source = "civo/civo"
+     hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = ">= 1.43.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -23,10 +24,15 @@ terraform {
       source  = "hashicorp/vault"
       version = "3.19.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = ">= 2.4.0"
+    }
+    remote = {
+      source  = "tenstad/remote"
+      version = ">= 0.1.2"
+    }
   }
-}
-provider "civo" {
-  region = "<CLOUD_REGION>"
 }
 
 locals {
@@ -60,3 +66,15 @@ resource "local_file" "kubeconfig" {
   content  = civo_kubernetes_cluster.kubefirst.kubeconfig
   filename = local.kube_config_filename
 }
+
+ # Enable etcd snapshot backups to S3 storage.
+  # Just provide a map with the needed settings (according to your S3 storage provider) and backups to S3 will
+  # be enabled (with the default settings for etcd snapshots).
+  # Cloudflare's R2 offers 10GB, 10 million reads and 1 million writes per month for free.
+  # For proper context, have a look at https://docs.k3s.io/datastore/backup-restore.
+  # etcd_s3_backup = {
+  #   etcd-s3-endpoint        = "xxxx.r2.cloudflarestorage.com"
+  #   etcd-s3-access-key      = "<access-key>"
+  #   etcd-s3-secret-key      = "<secret-key>"
+  #   etcd-s3-bucket          = "k3s-etcd-snapshots"
+  # }

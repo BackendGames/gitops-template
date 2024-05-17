@@ -6,20 +6,6 @@ variable "b64_docker_auth" {
   type = string
 }
 
-variable "cloudflare_origin_ca_api_key" {
-  type    = string
-  default = ""
-}
-
-variable "cloudflare_api_key" {
-  type    = string
-  default = ""
-}
-
-variable "hetzner_token" {
-  type = string
-}
-
 variable "github_token" {
   type = string
 }
@@ -44,17 +30,13 @@ variable "atlantis_repo_webhook_url" {
   type    = string
 }
 
-variable "aws_access_key_id" {
-  default = ""
-  type    = string
-}
-
-variable "aws_secret_access_key" {
-  default = ""
-  type    = string
-}
-
 variable "vault_token" {
   default = ""
   type    = string
+}
+
+variable "hcloud_token" {
+  description = "Hetzner Cloud API Token."
+  type        = string
+  sensitive   = true
 }
