@@ -17,6 +17,17 @@ resource "vault_generic_secret" "chartmuseum_secrets" {
   )
 }
 
+resource "vault_generic_secret" "civo_creds" {
+  path = "${vault_mount.secret.path}/argo"
+
+  data_json = jsonencode(
+    {
+      accesskey = var.aws_access_key_id,
+      secretkey = var.aws_secret_access_key,
+    }
+  )
+}
+
 resource "vault_generic_secret" "crossplane" {
   path = "${vault_mount.secret.path}/crossplane"
 
@@ -24,22 +35,11 @@ resource "vault_generic_secret" "crossplane" {
     {
       AWS_ACCESS_KEY_ID     = var.aws_access_key_id,
       AWS_SECRET_ACCESS_KEY = var.aws_secret_access_key,
-      DIGITALOCEAN_TOKEN    = var.do_token,
+      HETZNER_TOKEN            = var.hetzner_token
       VAULT_ADDR            = "http://vault.vault.svc.cluster.local:8200"
       VAULT_TOKEN           = var.vault_token
       password              = var.github_token
       username              = "<GITHUB_USER>"
-    }
-  )
-}
-
-resource "vault_generic_secret" "digitalocean_creds" {
-  path = "${vault_mount.secret.path}/argo"
-
-  data_json = jsonencode(
-    {
-      accesskey = var.aws_access_key_id,
-      secretkey = var.aws_secret_access_key,
     }
   )
 }
@@ -93,6 +93,18 @@ resource "vault_generic_secret" "ci_secrets" {
   )
 }
 
+resource "vault_generic_secret" "cloudflare" {
+  path = "${vault_mount.secret.path}/cloudflare"
+
+  data_json = jsonencode(
+    {
+      origin-ca-api-key = var.cloudflare_origin_ca_api_key,
+      cf-api-key        = var.cloudflare_api_key,
+      cloudflare-token  = var.cloudflare_api_key,
+    }
+  )
+}
+
 resource "vault_generic_secret" "atlantis_secrets" {
   path = "${vault_mount.secret.path}/atlantis"
 
@@ -110,13 +122,15 @@ resource "vault_generic_secret" "atlantis_secrets" {
       TF_VAR_aws_access_key_id            = var.aws_access_key_id,
       TF_VAR_aws_secret_access_key        = var.aws_secret_access_key,
       TF_VAR_b64_docker_auth              = var.b64_docker_auth,
-      DO_TOKEN                            = var.do_token,
-      TF_VAR_do_token                     = var.do_token,
+      HETZNER_TOKEN                          = var.hetzner_token,
+      TF_VAR_HETZNER_TOKEN                   = var.hetzner_token,
       GITHUB_OWNER                        = "<GITHUB_OWNER>",
       GITHUB_TOKEN                        = var.github_token,
       TF_VAR_github_token                 = var.github_token,
       TF_VAR_kbot_ssh_public_key          = var.kbot_ssh_public_key,
       TF_VAR_kbot_ssh_private_key         = var.kbot_ssh_private_key,
+      TF_VAR_cloudflare_origin_ca_api_key = var.cloudflare_origin_ca_api_key
+      TF_VAR_cloudflare_api_key           = var.cloudflare_api_key
       VAULT_ADDR                          = "http://vault.vault.svc.cluster.local:8200",
       TF_VAR_vault_addr                   = "http://vault.vault.svc.cluster.local:8200",
       VAULT_TOKEN                         = var.vault_token,

@@ -1,12 +1,8 @@
 provider "kubernetes" {
-  host  = data.digitalocean_kubernetes_cluster.kubefirst.endpoint
-  token = data.digitalocean_kubernetes_cluster.kubefirst.kube_config[0].token
-  cluster_ca_certificate = base64decode(
-    data.digitalocean_kubernetes_cluster.kubefirst.kube_config[0].cluster_ca_certificate
-  )
+  config_path = "<KUBE_CONFIG_PATH>"
 }
 
-data "digitalocean_kubernetes_cluster" "kubefirst" {
+data "civo_kubernetes_cluster" "kubefirst" {
   name = local.cluster_name
 }
 
@@ -17,7 +13,7 @@ resource "vault_auth_backend" "k8s" {
 
 resource "vault_kubernetes_auth_backend_config" "k8s" {
   backend         = vault_auth_backend.k8s.path
-  kubernetes_host = data.digitalocean_kubernetes_cluster.kubefirst.endpoint
+  kubernetes_host = data.civo_kubernetes_cluster.kubefirst.api_endpoint
 }
 
 resource "vault_kubernetes_auth_backend_role" "k8s_atlantis" {

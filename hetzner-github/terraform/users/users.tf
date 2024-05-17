@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    endpoint = "nyc3.digitaloceanspaces.com"
-    key      = "terraform/users/terraform.tfstate"
     bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
-    // Don't change this.
-    region = "us-east-1"
+    key      = "terraform/users/terraform.tfstate"
+    endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+
+    region = "<CLOUD_REGION>"
 
     skip_credentials_validation = true
     skip_metadata_api_check     = true

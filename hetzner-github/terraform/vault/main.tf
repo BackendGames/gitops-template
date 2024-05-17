@@ -1,10 +1,10 @@
 terraform {
   backend "s3" {
-    endpoint = "nyc3.digitaloceanspaces.com"
-    key      = "terraform/vault/terraform.tfstate"
     bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
-    // Don't change this.
-    region = "us-east-1"
+    key      = "terraform/vault/terraform.tfstate"
+    endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+
+    region = "<CLOUD_REGION>"
 
     skip_credentials_validation = true
     skip_metadata_api_check     = true
@@ -12,9 +12,8 @@ terraform {
     force_path_style            = true
   }
   required_providers {
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
+    hetzner = {
+      source = "hetzner/hetzner"
     }
     vault = {
       source = "hashicorp/vault"
@@ -22,8 +21,9 @@ terraform {
   }
 }
 
-provider "digitalocean" {
-  token = var.do_token
+# export HETZNER_TOKEN=$MYTOKEN is set 
+provider "hetzner" {
+  region = "<CLOUD_REGION>"
 }
 
 provider "vault" {
