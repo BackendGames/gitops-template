@@ -74,7 +74,7 @@ spec:
               key: secretkey
             insecure: false
             bucket: <KUBEFIRST_STATE_STORE_BUCKET>
-            endpoint: nyc3.digitaloceanspaces.com
+            endpoint: objectstore.<CLOUD_REGION>.civo.com
             region: <CLOUD_REGION>
             useSDKCreds: false
             encryptionOptions:
