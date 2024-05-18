@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
     bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
-    key      = "terraform/civo/terraform.tfstate"
-    endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+    key      = "terraform/hetzner/terraform.tfstate"
+    endpoint = "https://objectstore.<CLOUD_REGION>.hetzner.com"
 
     region = "<CLOUD_REGION>"
 
@@ -40,21 +40,20 @@ locals {
   kube_config_filename = "../../../kubeconfig"
 }
 
-resource "civo_network" "kubefirst" {
-  label = local.cluster_name
+resource "hcloud_network" "kubefirst" {
+  name     = local.cluster_name
+  ip_range = "<IP_RANGE>"
 }
 
-resource "civo_firewall" "kubefirst" {
+resource "hcloud_firewall" "kubefirst" {
   name                 = local.cluster_name
-  network_id           = civo_network.kubefirst.id
-  create_default_rules = true
 }
 
-resource "civo_kubernetes_cluster" "kubefirst" {
+resource "hcloud_kubernetes_cluster" "kubefirst" {
   name         = local.cluster_name
-  network_id   = civo_network.kubefirst.id
-  firewall_id  = civo_firewall.kubefirst.id
-  cluster_type = "talos"
+  network_id   = hcloud_network.kubefirst.id
+  firewall_id  = hcloud_firewall.kubefirst.id
+  
   pools {
     label      = local.cluster_name
     size       = "<NODE_TYPE>"
@@ -63,7 +62,7 @@ resource "civo_kubernetes_cluster" "kubefirst" {
 }
 
 resource "local_file" "kubeconfig" {
-  content  = civo_kubernetes_cluster.kubefirst.kubeconfig
+  content  = hcloud_kubernetes_cluster.kubefirst.kubeconfig
   filename = local.kube_config_filename
 }
 

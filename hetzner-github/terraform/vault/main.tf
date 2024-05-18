@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
     key      = "terraform/vault/terraform.tfstate"
-    endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+    endpoint = "https://<HETZNER_STORE_ENDPOINT>"
 
     region = "<CLOUD_REGION>"
 
@@ -12,7 +12,7 @@ terraform {
     force_path_style            = true
   }
   required_providers {
-    hetzner = {
+    hcloud = {
       source = "hetzner/hetzner"
     }
     vault = {
@@ -22,8 +22,9 @@ terraform {
 }
 
 # export HETZNER_TOKEN=$MYTOKEN is set 
-provider "hetzner" {
+provider "hcloud" {
   region = "<CLOUD_REGION>"
+  token  = var.hcloud_token
 }
 
 provider "vault" {

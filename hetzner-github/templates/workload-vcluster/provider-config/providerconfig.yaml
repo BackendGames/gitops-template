@@ -10,7 +10,7 @@ spec:
         backend "s3" {
           bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
           key      = "registry/clusters/<WORKLOAD_CLUSTER_NAME>/infrastructure/provider-config/terraform.tfstate"
-          endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+          endpoint = "https://<HETZNER_STORE_ENDPOINT>"
 
           region = "<CLOUD_REGION>"
 
@@ -20,8 +20,9 @@ spec:
           force_path_style            = true
         }
         required_providers {
-          civo = {
-            source = "civo/civo"
+          hcloud = {
+            source  = "hetznercloud/hcloud"
+            version = ">= 1.43.0"
           }
           kubernetes = {
             source = "hashicorp/kubernetes"
@@ -33,7 +34,7 @@ spec:
           }
         }
       }
-      provider "civo" {
+      provider "hcloud" {
         region = "<WORKLOAD_CLUSTER_REGION>"
       }
   credentials:
@@ -41,7 +42,7 @@ spec:
     source: None
     secretRef:
       namespace: crossplane-system
-      name: civo-creds
+      name: hcloud-creds
       key: token
   - filename: .git-credentials
     source: Secret

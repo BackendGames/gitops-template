@@ -100,7 +100,7 @@ data:
 
           function redirectToDocs() {
             window.open(
-              `https://docs.kubefirst.io/kubefirst/civo/${gitProvider}/user-creation`,
+              `https://docs.kubefirst.io/kubefirst/hcloud/${gitProvider}/user-creation`,
               '_blank',
             );
           }

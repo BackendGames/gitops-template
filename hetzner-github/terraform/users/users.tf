@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket   = "<KUBEFIRST_STATE_STORE_BUCKET>"
     key      = "terraform/users/terraform.tfstate"
-    endpoint = "https://objectstore.<CLOUD_REGION>.civo.com"
+    endpoint = "https://<HETZNER_STORE_ENDPOINT>"
 
     region = "<CLOUD_REGION>"
 
